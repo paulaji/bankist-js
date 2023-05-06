@@ -106,3 +106,40 @@ const displayMovements = function (movements) {
 };
 
 displayMovements(account1.movements);
+
+const eurToUSD = 1.1;
+
+// const movementsUSD = movements.map(function (mov) {
+//   return mov * eurToUSD;
+// });
+
+// using arrow function
+const movementsUSD = movements.map(mov => mov * eurToUSD);
+console.log(movementsUSD);
+
+const movementUSDFor = [];
+for (const mov of movements) movementUSDFor.push(mov * eurToUSD);
+console.log(movementUSDFor);
+
+const movementsDescription = movements.map(
+  (mov, i, arr) =>
+    `Movement ${i + 1}: Account ${mov > 0 ? 'credited' : 'debited'} ${Math.abs(
+      mov
+    )}`
+);
+
+console.log(movementsDescription);
+
+// function to create short user names paul aji will be pa
+const createUsernames = function (allAccounts) {
+  allAccounts.forEach(function (indAccount) {
+    indAccount.username = indAccount.owner
+      .toLowerCase()
+      .split(' ')
+      .map(eachWord => eachWord[0])
+      .join('');
+  });
+};
+
+createUsernames(accounts);
+console.log(accounts);
