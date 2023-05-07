@@ -72,19 +72,13 @@ const currencies = new Map([
 ]);
 
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
-
 /////////////////////////////////////////////////
+// PROJECT STUFF
 
-// for (const movement of movements) {
-//   if (movement > 0) console.log(`You deposited ${movement}`);
-//   else console.log(`You withdrew ${Math.abs(movement)}`);
-// }
+// conversion value
+const eurToUSD = 1.1;
 
-// movements.forEach(function (movement) {
-//   if (movement > 0) console.log(`You deposited ${movement}`);
-//   else console.log(`You withdrew ${Math.abs(movement)}`);
-// });
-
+// display the transactions
 const displayMovements = function (movements) {
   // setting already existing things to NIL
   containerMovements.innerHTML = '';
@@ -94,41 +88,16 @@ const displayMovements = function (movements) {
 
     const html = `
     <div class="movements__row">
-      <div class="movements__type movements__type--${type}">${
+    <div class="movements__type movements__type--${type}">${
       i + 1
     } ${type}(S)</div>
-      <div class="movements__value">${mov}</div>
+    <div class="movements__value">${mov}</div>
     </div>
-     `;
+    `;
 
     containerMovements.insertAdjacentHTML('afterbegin', html);
   });
 };
-
-displayMovements(account1.movements);
-
-const eurToUSD = 1.1;
-
-// const movementsUSD = movements.map(function (mov) {
-//   return mov * eurToUSD;
-// });
-
-// using arrow function
-const movementsUSD = movements.map(mov => mov * eurToUSD);
-console.log(movementsUSD);
-
-const movementUSDFor = [];
-for (const mov of movements) movementUSDFor.push(mov * eurToUSD);
-console.log(movementUSDFor);
-
-const movementsDescription = movements.map(
-  (mov, i, arr) =>
-    `Movement ${i + 1}: Account ${mov > 0 ? 'credited' : 'debited'} ${Math.abs(
-      mov
-    )}`
-);
-
-console.log(movementsDescription);
 
 // function to create short user names paul aji will be pa
 const createUsernames = function (allAccounts) {
@@ -143,3 +112,69 @@ const createUsernames = function (allAccounts) {
 
 createUsernames(accounts);
 console.log(accounts);
+displayMovements(account1.movements);
+
+// function to display balance of an account
+const displayBalance = movements => {
+  const balance = movements.reduce((acc, mov) => acc + mov, 0);
+  labelBalance.textContent = `${balance} EUR`;
+};
+
+displayBalance(account1.movements);
+
+/////////////////////////////////////////////////
+// PRACTICE STUFF
+
+// for (const movement of movements) {
+//   if (movement > 0) console.log(`You deposited ${movement}`);
+//   else console.log(`You withdrew ${Math.abs(movement)}`);
+// }
+
+// movements.forEach(function (movement) {
+//   if (movement > 0) console.log(`You deposited ${movement}`);
+//   else console.log(`You withdrew ${Math.abs(movement)}`);
+// });
+
+// // const movementsUSD = movements.map(function (mov) {
+// //   return mov * eurToUSD;
+// // });
+
+// // using arrow function
+// const movementsUSD = movements.map(mov => mov * eurToUSD);
+// console.log(movementsUSD);
+
+// const movementUSDFor = [];
+// for (const mov of movements) movementUSDFor.push(mov * eurToUSD);
+// console.log(movementUSDFor);
+
+// const movementsDescription = movements.map(
+//   (mov, i, arr) =>
+//     `Movement ${i + 1}: Account ${mov > 0 ? 'credited' : 'debited'} ${Math.abs(
+//       mov
+//     )}`
+// );
+
+// console.log(movementsDescription);
+
+// const deposits = movements.filter(function (mov) {
+//   return mov > 0;
+// });
+
+// const withdrawals = movements
+//   .filter(mov => Math.abs(mov < 0))
+//   .map(mov => Math.abs(mov));
+
+// console.log(movements);
+// console.log(deposits);
+// console.log(withdrawals);
+
+// console.log(movements);
+
+// const balance = movements.reduce(function (acc, cur, i, arr) {
+//   console.log(`Iteration: ${i} Accumulator: ${acc}`);
+//   return acc + cur;
+// }, 0);
+
+const balance = movements.reduce((acc, mov) => acc + mov, 0);
+
+console.log(balance);
