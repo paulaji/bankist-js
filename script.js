@@ -114,9 +114,9 @@ createUsernames(accounts);
 console.log(accounts);
 
 // function to display balance of an account
-const displayBalance = movements => {
-  const balance = movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `${balance} EUR`;
+const displayBalance = account => {
+  account.balance = account.movements.reduce((acc, mov) => acc + mov, 0);
+  labelBalance.textContent = `${account.balance} EUR`;
 };
 
 // function to display how much money came in and went out and also the interest
@@ -142,6 +142,17 @@ const displaySummary = function (account) {
     })
     .reduce((acc, mov) => acc + mov);
   labelSumInterest.textContent = `${interest}EUR`;
+};
+
+const updateUI = function (acc) {
+  // display the account movements/transactions corresponding to which user logged in
+  displayMovements(acc.movements);
+
+  // display the balance
+  displayBalance(acc);
+
+  // display account summary at the bottom
+  displaySummary(acc);
 };
 
 // this function is to check for the login
@@ -180,16 +191,40 @@ btnLogin.addEventListener('click', function (e) {
   inputLoginPin.value = inputLoginUsername.value = '';
   inputLoginPin.blur();
 
-  // display the account movements/transactions corresponding to which user logged in
-  displayMovements(currentAccount.movements);
-
-  // display the balance
-  displayBalance(currentAccount.movements);
-
-  // display account summary at the bottom
-  displaySummary(currentAccount);
+  // update the UI
+  updateUI(currentAccount);
 });
 
+// setting transfers
+btnTransfer.addEventListener('click', function (e) {
+  // to prevent reload because this is a form
+  e.preventDefault();
+
+  // storing input amount in a variable
+  const amount = Number(inputTransferAmount.value);
+
+  // checking whether there is actually an account to which we are trying to transfer to
+  const recAccount = accounts.find(
+    acc => acc.username === inputTransferTo.value
+  );
+
+  console.log(amount, recAccount);
+  inputTransferAmount.value = inputTransferTo.value = '';
+
+  //now inorder to transfer money, we have to check if the amount inputted is positive and also if the account has necessary balance
+  if (
+    amount > 0 &&
+    recAccount && // to check whether the recAccount actually exists
+    amount <= currentAccount.balance &&
+    recAccount?.username != currentAccount.username
+  ) {
+    console.log(`Valid Transfer`);
+    currentAccount.movements.push(-amount);
+    recAccount.movements.push(amount);
+    // update the UI
+    updateUI(currentAccount);
+  }
+});
 /////////////////////////////////////////////////
 // PRACTICE STUFF
 
@@ -283,7 +318,7 @@ btnLogin.addEventListener('click', function (e) {
 
 // find method
 const firstWithdrawal = movements.find(mov => mov < 0);
-console.log(firstWithdrawal);
+// console.log(firstWithdrawal);
 
 const account = accounts.find(acc => acc.owner === 'Jessica Davis');
-console.log(account);
+// console.log(account);
