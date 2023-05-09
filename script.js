@@ -90,7 +90,7 @@ const displayMovements = function (movements) {
     <div class="movements__row">
     <div class="movements__type movements__type--${type}">${
       i + 1
-    } ${type}(S)</div>
+    }: ${type}</div>
     <div class="movements__value">${mov}</div>
     </div>
     `;
@@ -112,7 +112,6 @@ const createUsernames = function (allAccounts) {
 
 createUsernames(accounts);
 console.log(accounts);
-displayMovements(account1.movements);
 
 // function to display balance of an account
 const displayBalance = movements => {
@@ -120,7 +119,76 @@ const displayBalance = movements => {
   labelBalance.textContent = `${balance} EUR`;
 };
 
-displayBalance(account1.movements);
+// function to display how much money came in and went out and also the interest
+// interest rate here is 1.2
+// also we are putting in a constrain where in if the individual interest of a particular deposit isnt greater than or equal to 1 EUR, we avoid it
+const displaySummary = function (account) {
+  const incomes = account.movements
+    .filter(mov => mov > 0)
+    .reduce((acc, mov) => acc + mov, 0);
+  labelSumIn.textContent = `${incomes}EUR`;
+
+  const out = account.movements
+    .filter(mov => mov < 0)
+    .reduce((acc, mov) => acc + mov, 0);
+  labelSumOut.textContent = `${Math.abs(out)}EUR`;
+
+  const interest = account.movements
+    .filter(mov => mov > 0)
+    .map(mov => (mov * account.interestRate) / 100)
+    .filter((mov, i, arr) => {
+      console.log(arr);
+      return mov >= 1;
+    })
+    .reduce((acc, mov) => acc + mov);
+  labelSumInterest.textContent = `${interest}EUR`;
+};
+
+// this function is to check for the login
+// i.e. if the login username and pass matches and then we login
+
+// declaring a global variable currentAccount to compare the login account with other things
+let currentAccount;
+
+btnLogin.addEventListener('click', function (e) {
+  // to prevent the form from submitting/reloading
+  e.preventDefault();
+
+  //to find account details using login username
+  currentAccount = accounts.find(
+    acc => acc.username === inputLoginUsername.value
+  );
+  console.log(currentAccount);
+  // to check if the currentAccount we retrieved using the username and the PIN of that retrieved object matches!
+  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+    // account details match aaya,
+    // change UI and display welcome message
+
+    //using slice method
+    // labelWelcome.textContent = `Welcome back, ${currentAccount.owner.slice(
+    //   0,
+    //   currentAccount.owner.indexOf(' ')
+    // )}`;
+
+    // using split method
+    labelWelcome.textContent = `Welcome back, ${
+      currentAccount.owner.split(' ')[0]
+    }`;
+    containerApp.style.opacity = 100;
+  }
+  // clear input fields so that pass and username wont remain there for everyone to see
+  inputLoginPin.value = inputLoginUsername.value = '';
+  inputLoginPin.blur();
+
+  // display the account movements/transactions corresponding to which user logged in
+  displayMovements(currentAccount.movements);
+
+  // display the balance
+  displayBalance(currentAccount.movements);
+
+  // display account summary at the bottom
+  displaySummary(currentAccount);
+});
 
 /////////////////////////////////////////////////
 // PRACTICE STUFF
@@ -175,6 +243,47 @@ displayBalance(account1.movements);
 //   return acc + cur;
 // }, 0);
 
-const balance = movements.reduce((acc, mov) => acc + mov, 0);
+// const balance = movements.reduce((acc, mov) => acc + mov, 0);
 
-console.log(balance);
+// console.log(balance);
+
+// // how to get maximum value in an array
+
+// const max = movements.reduce((acc, mov, i) => {
+//   console.log(`iteration:${i} accumulator:${acc} currentvalue${mov} `);
+//   if (acc > mov) return acc;
+//   else return mov;
+// }, movements[0]);
+
+// console.log(max);
+
+// const dogAge = [5, 2, 4, 1, 15, 8, 3];
+
+// const dogHumanAge = dogAge.map((cur, i, arr) => {
+//   if (cur <= 2) return 2 * cur;
+//   else {
+//     return 16 + cur * 4;
+//   }
+// });
+
+// console.log(dogAge);
+// console.log(dogHumanAge);
+
+// const filteredAge = dogHumanAge.filter((mov, i, arr) => {
+//   return mov > 18;
+// });
+// console.log(filteredAge);
+
+// const avgAge =
+//   filteredAge.reduce((acc, cur, i, arr) => {
+//     return acc + cur;
+//   }, 0) / filteredAge.length;
+
+// console.log(avgAge);
+
+// find method
+const firstWithdrawal = movements.find(mov => mov < 0);
+console.log(firstWithdrawal);
+
+const account = accounts.find(acc => acc.owner === 'Jessica Davis');
+console.log(account);
