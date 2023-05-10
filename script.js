@@ -58,8 +58,8 @@ const inputLoginPin = document.querySelector('.login__input--pin');
 const inputTransferTo = document.querySelector('.form__input--to');
 const inputTransferAmount = document.querySelector('.form__input--amount');
 const inputLoanAmount = document.querySelector('.form__input--loan-amount');
-const inputCloseUsername = document.querySelector('.form__input--user');
-const inputClosePin = document.querySelector('.form__input--pin');
+let inputCloseUsername = document.querySelector('.form__input--user');
+let inputClosePin = document.querySelector('.form__input--pin');
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
@@ -155,6 +155,8 @@ const updateUI = function (acc) {
   displaySummary(acc);
 };
 
+// EVENT HANDLERS
+
 // this function is to check for the login
 // i.e. if the login username and pass matches and then we login
 
@@ -183,7 +185,7 @@ btnLogin.addEventListener('click', function (e) {
 
     // using split method
     labelWelcome.textContent = `Welcome back, ${
-      currentAccount.owner.split(' ')[0]
+      currentAccount?.owner.split(' ')[0]
     }`;
     containerApp.style.opacity = 100;
   }
@@ -225,6 +227,32 @@ btnTransfer.addEventListener('click', function (e) {
     updateUI(currentAccount);
   }
 });
+
+// closing account
+btnClose.addEventListener('click', function (e) {
+  e.preventDefault();
+  if (
+    inputCloseUsername.value == currentAccount.username &&
+    Number(inputClosePin.value) == currentAccount.pin
+  ) {
+    // to find index of account to be deleted
+    const index = accounts.findIndex(
+      account => account.username === currentAccount.username
+    );
+
+    //deleting the account
+    accounts.splice(index, 1);
+
+    // after deleting, we need to hide the UI
+    containerApp.style.opacity = 0;
+
+    // set the welcome message to default message
+    labelWelcome.textContent = `Log in to get started`;
+  }
+  // we have to set the input fields to default, athaayath close account inte username and password field if we click the submit arrow allengi it will remain there, why are we not doing this inside the loop? because loop ile condition vech correct username athaayath nammade accounts array il olla username adichaale aah fields clear aavu, but we want it in such a way that no matter what input we give, after hitting submit, we have to clear the field
+  inputCloseUsername = inputClosePin = '';
+});
+
 /////////////////////////////////////////////////
 // PRACTICE STUFF
 
