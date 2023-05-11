@@ -253,6 +253,25 @@ btnClose.addEventListener('click', function (e) {
   inputCloseUsername = inputClosePin = '';
 });
 
+// requesting loan
+// loan can be requested if there has been a deposit of 10% of what the loan amount wsa requested
+btnLoan.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  //storing loan amount in a variable
+  const amount = Number(inputLoanAmount.value);
+
+  //conditions for loan
+  if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
+    // add/deposit the amount into movements array
+    currentAccount.movements.push(amount);
+
+    //update the UI
+    updateUI(currentAccount);
+  }
+  inputLoanAmount.value = '';
+});
+
 /////////////////////////////////////////////////
 // PRACTICE STUFF
 
