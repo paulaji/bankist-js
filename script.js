@@ -79,11 +79,15 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 const eurToUSD = 1.1;
 
 // display the transactions
-const displayMovements = function (movements) {
+const displayMovements = function (movements, sort = false) {
+  // sorting functionality
+  // if sort is true, sort ? sort : else, display movements
+  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+
   // setting already existing things to NIL
   containerMovements.innerHTML = '';
 
-  movements.forEach(function (mov, i) {
+  movs.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
 
     const html = `
@@ -272,6 +276,16 @@ btnLoan.addEventListener('click', function (e) {
   inputLoanAmount.value = '';
 });
 
+// implementing the sorting button event handler
+let sorted = false; //setting the state variable as default false
+btnSort.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  displayMovements(currentAccount.movements, !sorted);
+
+  sorted = !sorted;
+});
+
 /////////////////////////////////////////////////
 // PRACTICE STUFF
 
@@ -369,3 +383,32 @@ const firstWithdrawal = movements.find(mov => mov < 0);
 
 const account = accounts.find(acc => acc.owner === 'Jessica Davis');
 // console.log(account);
+
+// flat method
+const allMovementsArray = accounts.map(account => account.movements);
+console.log(allMovementsArray);
+
+const allMovements = allMovementsArray.flat();
+console.log(allMovements);
+
+const bankTotalBalance = allMovements.reduce((acc, mov) => acc + mov, 0);
+console.log(bankTotalBalance);
+
+//sorting
+//ascending
+const newArray = [100, 30, -20, 1000, 43, 2, -12, -1344];
+console.log(...newArray);
+newArray.sort((a, b) => {
+  if (a < b) return -1;
+  if (a > b) return 1;
+});
+console.log(...newArray);
+
+//descending
+const newArray2 = [100, 30, -20, 1000, 43, 2, -12, -1344];
+console.log(...newArray2);
+newArray2.sort((a, b) => {
+  if (a > b) return -1;
+  if (b > a) return 1;
+});
+console.log(...newArray2);
