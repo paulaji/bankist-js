@@ -377,38 +377,124 @@ btnSort.addEventListener('click', function (e) {
 
 // console.log(avgAge);
 
-// find method
-const firstWithdrawal = movements.find(mov => mov < 0);
-// console.log(firstWithdrawal);
+// // find method
+// const firstWithdrawal = movements.find(mov => mov < 0);
+// // console.log(firstWithdrawal);
 
-const account = accounts.find(acc => acc.owner === 'Jessica Davis');
-// console.log(account);
+// const account = accounts.find(acc => acc.owner === 'Jessica Davis');
+// // console.log(account);
 
-// flat method
-const allMovementsArray = accounts.map(account => account.movements);
-console.log(allMovementsArray);
+// // flat method
+// const allMovementsArray = accounts.map(account => account.movements);
+// console.log(allMovementsArray);
 
-const allMovements = allMovementsArray.flat();
-console.log(allMovements);
+// const allMovements = allMovementsArray.flat();
+// console.log(allMovements);
 
-const bankTotalBalance = allMovements.reduce((acc, mov) => acc + mov, 0);
-console.log(bankTotalBalance);
+// const bankTotalBalance = allMovements.reduce((acc, mov) => acc + mov, 0);
+// console.log(bankTotalBalance);
 
-//sorting
-//ascending
-const newArray = [100, 30, -20, 1000, 43, 2, -12, -1344];
-console.log(...newArray);
-newArray.sort((a, b) => {
-  if (a < b) return -1;
-  if (a > b) return 1;
+// //sorting
+// //ascending
+// const newArray = [100, 30, -20, 1000, 43, 2, -12, -1344];
+// console.log(...newArray);
+// newArray.sort((a, b) => {
+//   if (a < b) return -1;
+//   if (a > b) return 1;
+// });
+// console.log(...newArray);
+
+// //descending
+// const newArray2 = [100, 30, -20, 1000, 43, 2, -12, -1344];
+// console.log(...newArray2);
+// newArray2.sort((a, b) => {
+//   if (a > b) return -1;
+//   if (b > a) return 1;
+// });
+// console.log(...newArray2);
+
+// generating 100 instances of random dice rolls
+const z = Array.from(
+  { length: 100 },
+  (cur, i) => Math.floor(Math.random() * 6) + 1
+);
+console.log(z);
+
+// selecting a real array from the document/html itself
+labelBalance.addEventListener('click', function () {
+  const movementsUI = Array.from(
+    document.querySelectorAll('.movements__value'),
+    el => Number(el.textContent.replace('EUR', ''))
+  );
+  console.log(movementsUI);
 });
-console.log(...newArray);
 
-//descending
-const newArray2 = [100, 30, -20, 1000, 43, 2, -12, -1344];
-console.log(...newArray2);
-newArray2.sort((a, b) => {
-  if (a > b) return -1;
-  if (b > a) return 1;
+// trying to get all transaction details
+const allTransactions = accounts.flatMap(e => e.movements);
+console.log(allTransactions);
+
+const transactionSum = accounts
+  .map(e => e.movements)
+  .flat()
+  .reduce((acc, e) => acc + e);
+
+console.log(transactionSum);
+
+// count how many depostis >= 1000
+const howMany1000 = accounts
+  .flatMap(e => e.movements)
+  .filter(e => e >= 1000).length;
+console.log(howMany1000);
+
+const howMany1000s = accounts
+  .flatMap(e => e.movements)
+  .reduce((acc, e, i) => {
+    if (e >= 1000) {
+      acc++;
+      console.log(acc);
+    }
+    return acc;
+  }, 0);
+console.log(howMany1000s);
+
+// using reduce to create object
+const { deposits, withdrawals } = accounts
+  .flatMap(e => e.movements)
+  .reduce(
+    (acc, e) => {
+      e > 0 ? (acc.deposits += e) : (acc.withdrawals += e);
+      return acc;
+    },
+    { deposits: 0, withdrawals: 0 }
+  );
+
+console.log(deposits, withdrawals);
+
+// titleCase()
+const convertTitleCase = function (title) {
+  const capitalize = element => {
+    return element[0].toUpperCase() + element.slice(1);
+  };
+
+  const exceptions = ['a', 'an', 'is', 'but', 'ok', 'to'];
+
+  const titleCase = title
+    .toLowerCase()
+    .split(' ')
+    .map(word => (exceptions.includes(word) ? word : capitalize(word)))
+    .join(' ');
+  return capitalize(titleCase);
+};
+console.log(convertTitleCase('is it really ok for a child to eat an elephant'));
+
+//EASTER EGG
+document.addEventListener('DOMContentLoaded', function () {
+  labelBalance.addEventListener('click', function () {
+    [...document.querySelectorAll('.movements__row')].forEach(function (
+      row,
+      i
+    ) {
+      if (i % 2 === 0) row.style.backgroundColor = 'grey';
+    });
+  });
 });
-console.log(...newArray2);
