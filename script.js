@@ -95,7 +95,7 @@ const displayMovements = function (movements, sort = false) {
         <div class="movements__type movements__type--${type}">${
       i + 1
     } ${type}</div>
-        <div class="movements__value">${mov}€</div>
+        <div class="movements__value">${mov.toFixed(2)}€</div>
       </div>
     `;
 
@@ -105,19 +105,19 @@ const displayMovements = function (movements, sort = false) {
 
 const calcDisplayBalance = function (acc) {
   acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `${acc.balance}€`;
+  labelBalance.textContent = `${acc.balance.toFixed(2)}€`;
 };
 
 const calcDisplaySummary = function (acc) {
   const incomes = acc.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumIn.textContent = `${incomes}€`;
+  labelSumIn.textContent = `${incomes.toFixed(2)}€`;
 
   const out = acc.movements
     .filter(mov => mov < 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumOut.textContent = `${Math.abs(out)}€`;
+  labelSumOut.textContent = `${Math.abs(out.toFixed(2))}€`;
 
   const interest = acc.movements
     .filter(mov => mov > 0)
@@ -127,7 +127,7 @@ const calcDisplaySummary = function (acc) {
       return int >= 1;
     })
     .reduce((acc, int) => acc + int, 0);
-  labelSumInterest.textContent = `${interest}€`;
+  labelSumInterest.textContent = `${interest.toFixed(2)}€`;
 };
 
 const createUsernames = function (accs) {
@@ -257,16 +257,16 @@ btnSort.addEventListener('click', function (e) {
 // console.log(Number.parseInt('30px'));
 
 // generate random between a specifies range
-const randomInt = (min, max) =>
-  Math.trunc(Math.random() * (max - min) + 1) + min;
-//replace .trunc with .floor beacuse it is better in dealing with negative numbers, so it will be a generous function
-const randomIntWithFloor = (min, max) =>
-  Math.floor(Math.random() * (max - min) + 1) + min;
+// const randomInt = (min, max) =>
+//   Math.trunc(Math.random() * (max - min) + 1) + min;
+// //replace .trunc with .floor beacuse it is better in dealing with negative numbers, so it will be a generous function
+// const randomIntWithFloor = (min, max) =>
+//   Math.floor(Math.random() * (max - min) + 1) + min;
 
-console.log(randomInt(10, 20));
-console.log(randomInt(-20, -10));
-console.log(randomIntWithFloor(10, 20));
-console.log(randomIntWithFloor(-20, -10));
+// console.log(randomInt(10, 20));
+// console.log(randomInt(-20, -10));
+// console.log(randomIntWithFloolabel(10, 20));
+// console.log(randomIntWithFloor(-20, -10));
 
 // // floor vs trunc
 // console.log(Math.trunc(23.8));
@@ -274,3 +274,16 @@ console.log(randomIntWithFloor(-20, -10));
 
 // toFixed
 console.log((2.7).toFixed(0));
+
+// cool little easter egg to change color if balance element is clicked
+
+document.addEventListener('DOMContentLoaded', function () {
+  labelBalance.addEventListener('click', function () {
+    [...document.querySelectorAll('.movements__row')].forEach(function (
+      row,
+      i
+    ) {
+      if (i % 2 === 0) row.style.backgroundColor = 'grey';
+    });
+  });
+});
